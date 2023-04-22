@@ -21,6 +21,10 @@ try {
   process.exit(1);
 }
 
+packageJson.dependencies = {
+  ...packageJson.dependencies,
+  "@eiiisd/prettier-config": "latest",
+};
 packageJson.prettier = "@eiiisd/prettier-config";
 
 fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
