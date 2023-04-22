@@ -16,12 +16,19 @@ try {
   execSync("npm install --save-dev @eiiisd/prettier-config", {
     stdio: "inherit",
   });
+
+  // Reload package.json after the installation
+  const updatedPackageJson = JSON.parse(
+    fs.readFileSync(packageJsonPath, "utf-8")
+  );
+  updatedPackageJson.prettier = "@eiiisd/prettier-config";
+  fs.writeFileSync(
+    packageJsonPath,
+    JSON.stringify(updatedPackageJson, null, 2)
+  );
+
+  console.log("Successfully added @eiiisd/prettier-config to package.json.");
 } catch (error) {
   console.error("Error: Failed to install @eiiisd/prettier-config.");
   process.exit(1);
 }
-
-packageJson.prettier = "@eiiisd/prettier-config";
-
-fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-console.log("Successfully added @eiiisd/prettier-config to package.json.");
