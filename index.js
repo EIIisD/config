@@ -9,26 +9,21 @@ if (!fs.existsSync(packageJsonPath)) {
   process.exit(1)
 }
 
-const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
-
 try {
-  // Reload package.json after the installation
-  const updatedPackageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
+  let packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
 
-  if (
-    updatedPackageJson.devDependencies &&
-    !updatedPackageJson.devDependencies['@eiiisd/prettier-config']
-  ) {
-    console.error('Error: Failed to install @eiiisd/prettier-config.')
-    process.exit(1)
+  packageJson.prettier = '@eiiisd/prettier-config'
+  packageJson.eslintConfig = {
+    extends: ['@eiiisd/eslint-config'],
   }
 
-  updatedPackageJson.prettier = '@eiiisd/prettier-config'
-  fs.writeFileSync(packageJsonPath, JSON.stringify(updatedPackageJson, null, 2))
-  console.log('Installing @eiiisd/prettier-config...')
-  execSync('npm install --save-dev @eiiisd/prettier-config', { stdio: 'inherit' })
+  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2))
+
+  execSync('npm install @eiiisd/prettier-config', { stdio: 'inherit' })
   console.log('Successfully added @eiiisd/prettier-config to package.json.')
+  execSync('npm install @eiiisd/eslint-config', { stdio: 'inherit' })
+  console.log('Successfully added @eiiisd/eslint-config to package.json.')
 } catch (error) {
-  console.error('Error: Failed to install @eiiisd/prettier-config.')
+  console.error('Error: Failed to install packages.')
   process.exit(1)
 }
